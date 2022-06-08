@@ -4,6 +4,7 @@ using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.ModelBinding;
@@ -51,6 +52,54 @@ namespace LabBigSchool_NguyenDuyHoangAnh.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        
+        [Authorize]
+        public ActionResult Attending()
+        {
+            var useId = User.Identity.GetUserId();
+
+            var courses = _dbContext.Attendaces
+                .Where(a => a.AttendeeId == useId)
+                .Select(a => a.Course)
+                .Include(l => l.Lecturer)
+                .Include(l => l.Category)
+                .ToList();
+
+            var viewModel = new CourseViewModel
+            {
+                UpcommingCourses = courses,
+                ShowAction = User.Identity.IsAuthenticated
+            };
+            return View(viewModel);
+        }
+
+        [Authorize]
+        public ActionResult Mine()
+        {
+            var useId = User.Identity.GetUserId();
+
+            var courses = _dbContext.courses
+                .Where(c => c.LecturerId == useId && c.DateTime > DateTime.Now)
+                .Include(l => l.Lecturer)
+                .Include(l => l.Category)
+                .ToList();
+
+            return View(courses);
+        }
+        [Authorize]
+        public ActionResult Edit(int id)
+        {
+            var useId = User.Identity.GetUserId();
+            var course = _dbContext.courses.Single(c => c.ID == id && c.LecturerId == useId);
+
+            var viewModel = new CourseViewModel
+            {
+                Categories = _dbContext.categories.ToList(),
+                Date = course.DateTime.ToString("dd/M/yyyy"),
+                Time = course.DateTime.ToString("HH:mm"),
+                Category = course.CategoryId,
+                Place = course.Place,
+            };   
+            return View("Crete",viewModel);
+        }
     }
 }

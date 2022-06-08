@@ -1,4 +1,5 @@
 ﻿using LabBigSchool_NguyenDuyHoangAnh.Models;
+using LabBigSchool_NguyenDuyHoangAnh.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,11 +10,14 @@ namespace LabBigSchool_NguyenDuyHoangAnh.Views.ViewModels
 {
     public class CourseViewModel
     {
+
         [Required]
         public string Place { get; set; }
         [Required]
+        [FutureDate]
         public string Date { get; set; }
         [Required]
+        [ValidTime]
         public string Time { get; set; }
         [Required]
         public byte Category { get; set; }
@@ -22,5 +26,7 @@ namespace LabBigSchool_NguyenDuyHoangAnh.Views.ViewModels
         {
             return DateTime.Parse(string.Format("{0} {1} ", Date, Time));
         }
+        public IEnumerable<Course> UpcommingCourses { get; set; }
+        public bool ShowAction { get; set; }
     }
 }
