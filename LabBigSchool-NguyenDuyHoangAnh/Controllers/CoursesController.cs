@@ -21,15 +21,11 @@ namespace LabBigSchool_NguyenDuyHoangAnh.Controllers
             _dbContext = new ApplicationDbContext();
         }
         // GET: Courses
-        [Authorize]
-
-        //
-
         public ActionResult Create()
         {
             var viewModel = new CourseViewModel
             {
-                Categories = _dbContext.Categories.ToList()
+                Categories = _dbContext.categories.ToList()
             };
             return View(viewModel);
         }
@@ -40,7 +36,7 @@ namespace LabBigSchool_NguyenDuyHoangAnh.Controllers
         {
             if (!ModelState.IsValid)
             {
-                viewModel.Categories = _dbContext.Categories.ToList();
+                viewModel.Categories = _dbContext.categories.ToList();
                 return View("Create", viewModel);
             }
             var coure = new Course
@@ -52,12 +48,9 @@ namespace LabBigSchool_NguyenDuyHoangAnh.Controllers
             };
             _dbContext.courses.Add(coure);
             _dbContext.SaveChanges();
-            return ReadirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
-        private ActionResult ReadirectToAction(string v1, string v2)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
