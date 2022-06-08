@@ -21,10 +21,6 @@ namespace LabBigSchool_NguyenDuyHoangAnh.Controllers
             _dbContext = new ApplicationDbContext();
         }
         // GET: Courses
-        [Authorize]
-
-        //
-
         public ActionResult Create()
         {
             var viewModel = new CourseViewModel
